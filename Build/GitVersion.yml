@@ -1,0 +1,8 @@
+assembly-versioning-scheme: MajorMinorPatch
+mode: ContinuousDelivery
+branches:
+  develop:
+    regex: develop
+    tag: unstable
+ignore:
+  sha: []

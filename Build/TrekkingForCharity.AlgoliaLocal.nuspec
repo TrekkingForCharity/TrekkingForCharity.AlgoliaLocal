@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>TrekkingForCharity.AlgoliaLocal</id>
+    <version>1.0.0</version>
+    <authors>Andrew Davis</authors>
+    <owners>Trekking for Charity</owners>
+    <licenseUrl>https://raw.githubusercontent.com/TrekkingForCharity/TrekkingForCharity.AlgoliaLocal/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/TrekkingForCharity/TrekkingForCharity.AlgoliaLocal</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A simple library to help provide a local version of Algolia to test</description>
+    <copyright>Copyright 2018</copyright>
+    <tags>Algolia</tags>
+    <dependencies>
+    </dependencies>
+    
+  </metadata>
+  <files>
+    <file src="TrekkingForCharity.AlgoliaLocal.dll" target="lib\netstandard1.3\TrekkingForCharity.AlgoliaLocal.dll" />
+  </files>
+</package>

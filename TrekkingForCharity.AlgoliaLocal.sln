@@ -1,0 +1,75 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26124.0
+MinimumVisualStudioVersion = 15.0.26124.0
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{A8BAA9AA-93B0-4AAF-9961-BDBC9F498E93}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		CONTRIBUTING.md = CONTRIBUTING.md
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{21C67A1D-639E-41E3-BA07-1FF5CE5C8CEB}"
+	ProjectSection(SolutionItems) = preProject
+		Build\build.cake = Build\build.cake
+		Build\build.ps1 = Build\build.ps1
+		Build\GitVersion.yml = Build\GitVersion.yml
+		Build\TrekkingForCharity.AlgoliaLocal.nuspec = Build\TrekkingForCharity.AlgoliaLocal.nuspec
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{937AF2DC-FEC7-44E5-AF68-02D4E3872B40}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F9E9A912-8977-4038-8B04-5ABD50962533}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrekkingForCharity.AlgoliaLocal", "Source\TrekkingForCharity.AlgoliaLocal\TrekkingForCharity.AlgoliaLocal.csproj", "{822D45BA-DF4B-468C-8240-720370F25E13}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrekkingForCharity.AlgoliaLocal.Tests", "Tests\TrekkingForCharity.AlgoliaLocal.Tests\TrekkingForCharity.AlgoliaLocal.Tests.csproj", "{E2F36D89-3F2F-41D0-BDD1-E5D6A9325B60}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{822D45BA-DF4B-468C-8240-720370F25E13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{822D45BA-DF4B-468C-8240-720370F25E13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{822D45BA-DF4B-468C-8240-720370F25E13}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{822D45BA-DF4B-468C-8240-720370F25E13}.Debug|x64.Build.0 = Debug|Any CPU
+		{822D45BA-DF4B-468C-8240-720370F25E13}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{822D45BA-DF4B-468C-8240-720370F25E13}.Debug|x86.Build.0 = Debug|Any CPU
+		{822D45BA-DF4B-468C-8240-720370F25E13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{822D45BA-DF4B-468C-8240-720370F25E13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{822D45BA-DF4B-468C-8240-720370F25E13}.Release|x64.ActiveCfg = Release|Any CPU
+		{822D45BA-DF4B-468C-8240-720370F25E13}.Release|x64.Build.0 = Release|Any CPU
+		{822D45BA-DF4B-468C-8240-720370F25E13}.Release|x86.ActiveCfg = Release|Any CPU
+		{822D45BA-DF4B-468C-8240-720370F25E13}.Release|x86.Build.0 = Release|Any CPU
+		{E2F36D89-3F2F-41D0-BDD1-E5D6A9325B60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2F36D89-3F2F-41D0-BDD1-E5D6A9325B60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2F36D89-3F2F-41D0-BDD1-E5D6A9325B60}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E2F36D89-3F2F-41D0-BDD1-E5D6A9325B60}.Debug|x64.Build.0 = Debug|Any CPU
+		{E2F36D89-3F2F-41D0-BDD1-E5D6A9325B60}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E2F36D89-3F2F-41D0-BDD1-E5D6A9325B60}.Debug|x86.Build.0 = Debug|Any CPU
+		{E2F36D89-3F2F-41D0-BDD1-E5D6A9325B60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2F36D89-3F2F-41D0-BDD1-E5D6A9325B60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2F36D89-3F2F-41D0-BDD1-E5D6A9325B60}.Release|x64.ActiveCfg = Release|Any CPU
+		{E2F36D89-3F2F-41D0-BDD1-E5D6A9325B60}.Release|x64.Build.0 = Release|Any CPU
+		{E2F36D89-3F2F-41D0-BDD1-E5D6A9325B60}.Release|x86.ActiveCfg = Release|Any CPU
+		{E2F36D89-3F2F-41D0-BDD1-E5D6A9325B60}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{822D45BA-DF4B-468C-8240-720370F25E13} = {937AF2DC-FEC7-44E5-AF68-02D4E3872B40}
+		{E2F36D89-3F2F-41D0-BDD1-E5D6A9325B60} = {F9E9A912-8977-4038-8B04-5ABD50962533}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FCA97F9B-8532-4960-9613-D23929C459B0}
+	EndGlobalSection
+EndGlobal
