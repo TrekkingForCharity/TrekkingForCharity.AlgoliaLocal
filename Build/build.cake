@@ -72,7 +72,9 @@ Task("__Test")
     DotNetCoreTest("../tests/TrekkingForCharity.AlgoliaLocal.Tests/TrekkingForCharity.AlgoliaLocal.Tests.csproj", testSettings, coveletSettings);
 
     if (AppVeyor.IsRunningOnAppVeyor) {
-      AppVeyor.UploadTestResults(testFilePath, AppVeyorTestResultsType.XUnit);
+      if (FileExists(testFilePath)) {
+        AppVeyor.UploadTestResults(testFilePath, AppVeyorTestResultsType.XUnit);
+      }
     }
   });
 
@@ -109,12 +111,17 @@ Task("__ProcessDataForThirdParties")
         Login = sonarCloudToken,        
         Verbose = true,
         Organization = "trekking-for-charity",
-        OpenCoverReportsPath = MakeAbsolute(File("./build-artifacts/test/opencover.xml")).ToString(),
         Branch = branch
       };
+      if (FileExists("./build-artifacts/test/opencover.xml")) {
+        settings.OpenCoverReportsPath = MakeAbsolute(File("./build-artifacts/test/opencover.xml")).ToString();
+      }
+
       Sonar(ctx => ctx.DotNetCoreMSBuild("../TrekkingForCharity.AlgoliaLocal.sln"), settings);
 
-      Codecov("./build-artifacts/test/opencover.xml", codecovToken);
+      if (FileExists("./build-artifacts/test/opencover.xml")) {
+        Codecov("./build-artifacts/test/opencover.xml", codecovToken);
+      }
     }
   });
 
