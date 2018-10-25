@@ -1,5 +1,9 @@
 #tool "nuget:?package=GitVersion.CommandLine"
 #addin nuget:?package=Cake.Coverlet
+#tool nuget:?package=Codecov
+#addin nuget:?package=Cake.Codecov
+#tool nuget:?package=MSBuild.SonarQube.Runner.Tool
+#addin nuget:?package=Cake.Sonar
 
 var target = Argument("target", "Default");
 
