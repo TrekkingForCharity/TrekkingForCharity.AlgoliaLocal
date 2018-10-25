@@ -10,6 +10,7 @@ var target = Argument("target", "Default");
 string version, branch;
 var buildPath = Directory("./build-artifacts");
 var publishPath = buildPath + Directory("publish");
+var releasePath = buildPath + Directory("release");
 var testPath = buildPath + Directory("test");
 
 var codecovToken = EnvironmentVariable("CODECOV_TOKEN");
@@ -91,7 +92,7 @@ Task("__Publish")
 Task("__Package")
   .Does(() => {
     var nugetPackSettings = new NuGetPackSettings {
-      Version = buildNumber,
+      Version = version,
       BasePath = publishPath,
       OutputDirectory = releasePath
 		};
