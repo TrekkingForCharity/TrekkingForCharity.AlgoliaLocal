@@ -118,9 +118,16 @@ Task("__ProcessDataForThirdParties")
       }
 
       if (AppVeyor.IsRunningOnAppVeyor) {
+        int? pullRequestKey = null;
+        int result;
+        if (!string.IsNullOrWhiteSpace(EnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER"))) {
+          if (int.TryParse(EnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER"), out result)) {
+            pullRequestKey = result;
+          }
+        }
         settings.PullRequestBase = EnvironmentVariable("APPVEYOR_REPO_BRANCH"); //sonar.pullrequest.base=master
         settings.PullRequestBranch = EnvironmentVariable("APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH");  //sonar.pullrequest.branch=feature/my-new-feature
-        settings.PullRequestKey = EnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER");//sonar.pullrequest.key=5
+        settings.PullRequestKey = pullRequestKey;//sonar.pullrequest.key=5
         settings.PullRequestProvider = EnvironmentVariable("APPVEYOR_REPO_PROVIDER"); //sonar.pullrequest.provider
         settings.PullRequestGithubRepository = EnvironmentVariable("APPVEYOR_REPO_NAME"); //sonar.pullrequest.github.repository=my-company/my-repo
       }
