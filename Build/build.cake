@@ -110,8 +110,7 @@ Task("__ProcessDataForThirdParties")
         Key = "t4c-al",
         Login = sonarCloudToken,        
         Verbose = true,
-        Organization = "trekking-for-charity",
-        Branch = branch
+        Organization = "trekking-for-charity"
       };
       if (FileExists("./build-artifacts/test/opencover.xml")) {
         settings.OpenCoverReportsPath = MakeAbsolute(File("./build-artifacts/test/opencover.xml")).ToString();
@@ -130,6 +129,8 @@ Task("__ProcessDataForThirdParties")
         settings.PullRequestKey = pullRequestKey;//sonar.pullrequest.key=5
         settings.PullRequestProvider = EnvironmentVariable("APPVEYOR_REPO_PROVIDER"); //sonar.pullrequest.provider
         settings.PullRequestGithubRepository = EnvironmentVariable("APPVEYOR_REPO_NAME"); //sonar.pullrequest.github.repository=my-company/my-repo
+      } else {
+        settings.Branch = branch;
       }
 
       Sonar(ctx => ctx.DotNetCoreMSBuild("../TrekkingForCharity.AlgoliaLocal.sln"), settings);
