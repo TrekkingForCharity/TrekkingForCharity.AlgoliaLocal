@@ -40,7 +40,9 @@ Task("__Versioning")
       XmlPoke(file, "/Project/PropertyGroup/FileVersion", version);
       XmlPoke(file, "/Project/PropertyGroup/Version", version);
     }
-    AppVeyor.UpdateBuildVersion(gitVersion.SemVer);
+    if (AppVeyor.IsRunningOnAppVeyor) {
+      AppVeyor.UpdateBuildVersion(gitVersion.SemVer);
+    }
   });
 
 Task("__NugetRestore")
@@ -111,7 +113,7 @@ Task("__ProcessDataForThirdParties")
         settings.OpenCoverReportsPath = MakeAbsolute(File("./build-artifacts/test/opencover.xml")).ToString();
       }
 
-      if (AppVeyor.IsRunningOnAppVeyor) {
+      if (BuildSystem.AppVeyor.Environment.PullRequest.IsPullRequest) {
         int? pullRequestKey = null;
         int result;
         if (!string.IsNullOrWhiteSpace(EnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER"))) {
@@ -119,6 +121,13 @@ Task("__ProcessDataForThirdParties")
             pullRequestKey = result;
           }
         }
+        Information("APPVEYOR_REPO_BRANCH {0}", EnvironmentVariable("APPVEYOR_REPO_BRANCH"));
+        Information("APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH {0}", EnvironmentVariable("APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH"));
+        Information("APPVEYOR_PULL_REQUEST_NUMBER {0}", EnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER"));
+        Information("APPVEYOR_REPO_PROVIDER {0}", EnvironmentVariable("APPVEYOR_REPO_PROVIDER"));
+        Information("APPVEYOR_REPO_NAME {0}", EnvironmentVariable("APPVEYOR_REPO_NAME"));
+        
+
         settings.PullRequestBase = EnvironmentVariable("APPVEYOR_REPO_BRANCH"); //sonar.pullrequest.base=master
         settings.PullRequestBranch = EnvironmentVariable("APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH");  //sonar.pullrequest.branch=feature/my-new-feature
         settings.PullRequestKey = BuildSystem.AppVeyor.Environment.PullRequest.Number;//sonar.pullrequest.key=5
