@@ -117,6 +117,14 @@ Task("__ProcessDataForThirdParties")
         settings.OpenCoverReportsPath = MakeAbsolute(File("./build-artifacts/test/opencover.xml")).ToString();
       }
 
+      if (AppVeyor.IsRunningOnAppVeyor) {
+        settings.PullRequestBase = EnvironmentVariable("APPVEYOR_REPO_BRANCH"); //sonar.pullrequest.base=master
+        settings.PullRequestBranch = EnvironmentVariable("APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH");  //sonar.pullrequest.branch=feature/my-new-feature
+        settings.PullRequestKey = EnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER");//sonar.pullrequest.key=5
+        settings.PullRequestProvider = EnvironmentVariable("APPVEYOR_REPO_PROVIDER"); //sonar.pullrequest.provider
+        settings.PullRequestGithubRepository = EnvironmentVariable("APPVEYOR_REPO_NAME"); //sonar.pullrequest.github.repository=my-company/my-repo
+      }
+
       Sonar(ctx => ctx.DotNetCoreMSBuild("../TrekkingForCharity.AlgoliaLocal.sln"), settings);
 
       if (FileExists("./build-artifacts/test/opencover.xml")) {
