@@ -40,12 +40,7 @@ Task("__Versioning")
       XmlPoke(file, "/Project/PropertyGroup/FileVersion", version);
       XmlPoke(file, "/Project/PropertyGroup/Version", version);
     }
-    if (AppVeyor.IsRunningOnAppVeyor) {
-      GitVersion(new GitVersionSettings {
-        UpdateAssemblyInfo = true, 
-        OutputType = GitVersionOutput.BuildServer
-      });
-    }
+    AppVeyor.UpdateBuildVersion(gitVersion.SemVer);
   });
 
 Task("__NugetRestore")
@@ -126,7 +121,7 @@ Task("__ProcessDataForThirdParties")
         }
         settings.PullRequestBase = EnvironmentVariable("APPVEYOR_REPO_BRANCH"); //sonar.pullrequest.base=master
         settings.PullRequestBranch = EnvironmentVariable("APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH");  //sonar.pullrequest.branch=feature/my-new-feature
-        settings.PullRequestKey = pullRequestKey;//sonar.pullrequest.key=5
+        settings.PullRequestKey = BuildSystem.AppVeyor.Environment.PullRequest.Number;//sonar.pullrequest.key=5
         settings.PullRequestProvider = EnvironmentVariable("APPVEYOR_REPO_PROVIDER"); //sonar.pullrequest.provider
         settings.PullRequestGithubRepository = EnvironmentVariable("APPVEYOR_REPO_NAME"); //sonar.pullrequest.github.repository=my-company/my-repo
       } else {
