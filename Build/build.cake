@@ -41,10 +41,7 @@ Task("__Versioning")
       XmlPoke(file, "/Project/PropertyGroup/Version", version);
     }
     if (AppVeyor.IsRunningOnAppVeyor) {
-      GitVersion(new GitVersionSettings {
-        UpdateAssemblyInfo = true, 
-        OutputType = GitVersionOutput.BuildServer
-      });
+      AppVeyor.UpdateBuildVersion(gitVersion.SemVer);
     }
   });
 
@@ -110,11 +107,34 @@ Task("__ProcessDataForThirdParties")
         Key = "t4c-al",
         Login = sonarCloudToken,        
         Verbose = true,
-        Organization = "trekking-for-charity",
-        Branch = branch
+        Organization = "trekking-for-charity"
       };
       if (FileExists("./build-artifacts/test/opencover.xml")) {
         settings.OpenCoverReportsPath = MakeAbsolute(File("./build-artifacts/test/opencover.xml")).ToString();
+      }
+
+      if (BuildSystem.AppVeyor.Environment.PullRequest.IsPullRequest) {
+        int? pullRequestKey = null;
+        int result;
+        if (!string.IsNullOrWhiteSpace(EnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER"))) {
+          if (int.TryParse(EnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER"), out result)) {
+            pullRequestKey = result;
+          }
+        }
+        Information("APPVEYOR_REPO_BRANCH {0}", EnvironmentVariable("APPVEYOR_REPO_BRANCH"));
+        Information("APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH {0}", EnvironmentVariable("APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH"));
+        Information("APPVEYOR_PULL_REQUEST_NUMBER {0}", EnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER"));
+        Information("APPVEYOR_REPO_PROVIDER {0}", EnvironmentVariable("APPVEYOR_REPO_PROVIDER"));
+        Information("APPVEYOR_REPO_NAME {0}", EnvironmentVariable("APPVEYOR_REPO_NAME"));
+        
+
+        settings.PullRequestBase = EnvironmentVariable("APPVEYOR_REPO_BRANCH"); //sonar.pullrequest.base=master
+        settings.PullRequestBranch = EnvironmentVariable("APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH");  //sonar.pullrequest.branch=feature/my-new-feature
+        settings.PullRequestKey = BuildSystem.AppVeyor.Environment.PullRequest.Number;//sonar.pullrequest.key=5
+        settings.PullRequestProvider = EnvironmentVariable("APPVEYOR_REPO_PROVIDER"); //sonar.pullrequest.provider
+        settings.PullRequestGithubRepository = EnvironmentVariable("APPVEYOR_REPO_NAME"); //sonar.pullrequest.github.repository=my-company/my-repo
+      } else {
+        settings.Branch = branch;
       }
 
       Sonar(ctx => ctx.DotNetCoreMSBuild("../TrekkingForCharity.AlgoliaLocal.sln"), settings);
