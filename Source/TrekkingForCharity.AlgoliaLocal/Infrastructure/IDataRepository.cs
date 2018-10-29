@@ -2,18 +2,12 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 
 using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using ResultMonad;
 
 namespace TrekkingForCharity.AlgoliaLocal.Infrastructure
 {
-    public interface IRouteProcessor
+    public interface IDataRepository
     {
-        Regex Route { get; }
-
-        bool IsMatch(string path);
-
-        Task<Result<HttpResponseMessage>> Process(HttpRequestMessage message);
+        string Add(string indexName, string jsonObject);
     }
 }
