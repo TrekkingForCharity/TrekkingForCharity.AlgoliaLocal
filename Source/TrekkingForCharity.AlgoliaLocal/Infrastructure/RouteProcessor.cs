@@ -8,12 +8,12 @@ using ResultMonad;
 
 namespace TrekkingForCharity.AlgoliaLocal.Infrastructure
 {
-    public interface IRouteProcessor
+    public abstract class RouteProcessor : IRouteProcessor
     {
-        Regex Route { get; }
+        public abstract Regex Route { get; }
 
-        bool IsMatch(string path);
+        public bool IsMatch(string path) => this.Route.IsMatch(path);
 
-        Task<Result<HttpResponseMessage>> Process(HttpRequestMessage message);
+        public abstract Task<Result<HttpResponseMessage>> Process(HttpRequestMessage message);
     }
 }
