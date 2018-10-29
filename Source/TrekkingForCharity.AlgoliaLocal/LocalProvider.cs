@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using RichardSzalay.MockHttp;
@@ -13,17 +14,34 @@ namespace TrekkingForCharity.AlgoliaLocal
     {
         private readonly MockHttpMessageHandler _httpMessageHandler;
 
-        public LocalProvider()
+        private readonly RouteProcessorContainer _routeProcessorContainer;
+
+        public LocalProvider(IDataRepository dataRepository)
         {
+            this._routeProcessorContainer = new RouteProcessorContainer(dataRepository);
             this._httpMessageHandler = new MockHttpMessageHandler();
             this._httpMessageHandler.When("*").Respond(handler: this.Handler);
         }
 
         public MockHttpMessageHandler HttpMessageHandler => this._httpMessageHandler;
 
-        private Task<HttpResponseMessage> Handler(HttpRequestMessage message)
+        public RouteProcessorContainer RouteProcessorContainer => this._routeProcessorContainer;
+
+        private async Task<HttpResponseMessage> Handler(HttpRequestMessage message)
         {
-            throw new NotImplementedException($"No route setup for {message.RequestUri.AbsolutePath} with the method {message.Method}");
+            var routeResult = this._routeProcessorContainer.GetRouteForPath(message.RequestUri.AbsolutePath);
+            if (!routeResult.IsSuccess)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotImplemented);
+            }
+
+            var processResult = await routeResult.Value.Process(message);
+            if (processResult.IsSuccess)
+            {
+                return processResult.Value;
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.NotImplemented);
         }
     }
 }
