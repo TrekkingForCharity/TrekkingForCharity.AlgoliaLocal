@@ -16,7 +16,7 @@ namespace TrekkingForCharity.AlgoliaLocal.Tests.Infrastructure
         {
             var dataRepository = new Mock<IDataRepository>();
             var routeProcessorList = new RouteProcessorContainer(dataRepository.Object);
-            Assert.Equal(1, routeProcessorList.RouteProcessors.Count);
+            Assert.Equal(2, routeProcessorList.RouteProcessors.Count);
             Assert.Empty(routeProcessorList.CustomRouteProcessors);
         }
 
