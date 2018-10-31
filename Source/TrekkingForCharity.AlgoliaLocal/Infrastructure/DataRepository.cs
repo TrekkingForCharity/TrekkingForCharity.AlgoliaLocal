@@ -36,5 +36,21 @@ namespace TrekkingForCharity.AlgoliaLocal.Infrastructure
                 return data["objectID"];
             }
         }
+
+        public void Update(string index, string objId, string jsonObject)
+        {
+            using (var db = new LiteDatabase(this._dataFile))
+            {
+                var collection = db.GetCollection(index);
+                var doc = collection.FindOne(query: Query.EQ("objectID", objId));
+                var data = JsonSerializer.Deserialize(jsonObject).AsDocument;
+                foreach (var keyValuePair in data)
+                {
+                    doc[keyValuePair.Key] = keyValuePair.Value;
+                }
+
+                collection.Update(doc);
+            }
+        }
     }
 }

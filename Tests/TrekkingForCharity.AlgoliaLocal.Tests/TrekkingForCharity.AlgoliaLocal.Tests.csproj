@@ -48,8 +48,4 @@
     <ProjectReference Include="..\..\Source\TrekkingForCharity.AlgoliaLocal\TrekkingForCharity.AlgoliaLocal.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="RouteProcessors\" />
-  </ItemGroup>
-
 </Project>

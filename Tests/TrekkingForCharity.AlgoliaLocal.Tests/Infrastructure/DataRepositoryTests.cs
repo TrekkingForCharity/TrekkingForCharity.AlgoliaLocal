@@ -67,5 +67,38 @@ namespace TrekkingForCharity.AlgoliaLocal.Tests.Infrastructure
                 Assert.NotEmpty(doc);
             }
         }
+
+        [Fact]
+        public void Update_WhenValid_ExpectDataSaved()
+        {
+            var objId = $"SomeId_{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
+            using (var db = new LiteDatabase(this._fileName))
+            {
+                var collection = db.GetCollection(this._index);
+                var seedData = new BsonDocument();
+                seedData["FirstName"] = "Before";
+                seedData["LastName"] = "Change";
+                seedData["objectID"] = objId;
+                collection.Insert(seedData);
+            }
+
+            var dataToSend = new
+            {
+                FirstName = "After",
+                LastName = "Changes",
+                objectID = objId
+            };
+            var dataRepo = new DataRepository(this._fileName);
+            dataRepo.Update(this._index, objId, JsonConvert.SerializeObject(dataToSend));
+
+
+            using (var db = new LiteDatabase(this._fileName))
+            {
+                var collection = db.GetCollection(this._index);
+                var doc = collection.FindOne(Query.EQ("objectID", objId));
+                Assert.Equal("After", doc["FirstName"]);
+                Assert.Equal("Changes", doc["LastName"]);
+            }
+        }
     }
 }

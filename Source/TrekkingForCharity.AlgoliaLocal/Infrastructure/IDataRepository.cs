@@ -9,5 +9,7 @@ namespace TrekkingForCharity.AlgoliaLocal.Infrastructure
     public interface IDataRepository
     {
         string Add(string indexName, string jsonObject);
+
+        void Update(string index, string objId, string jsonObject);
     }
 }
