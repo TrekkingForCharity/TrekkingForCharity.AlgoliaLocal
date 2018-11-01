@@ -167,7 +167,6 @@ Task("__ProcessDataForThirdParties_Snyk")
           .Append("monitor")            
           .Append("--file=TrekkingForCharity.AlgoliaLocal.sln")            
           .Append("--org=trekkingforcharity")
-          .Append("--project-name=TrekkingForCharity.AlgoliaLocal"),
         WorkingDirectory = "../"
       });
             
