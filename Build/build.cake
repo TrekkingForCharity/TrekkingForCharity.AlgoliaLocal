@@ -15,6 +15,7 @@ var testPath = buildPath + Directory("test");
 
 var codecovToken = EnvironmentVariable("CODECOV_TOKEN");
 var sonarCloudToken = EnvironmentVariable("SONARCLOUD_TOKEN");
+var snykToken = EnvironmentVariable("SNYK_TOKEN");
 
 Task("__Clean")
   .Does(() => {
@@ -100,6 +101,12 @@ Task("__Package")
   });
 
 Task("__ProcessDataForThirdParties")
+  .IsDependentOn("__ProcessDataForThirdParties_Sonar")
+  .IsDependentOn("__ProcessDataForThirdParties_Codecov")
+  .IsDependentOn("__ProcessDataForThirdParties_Snyk");
+  
+
+Task("__ProcessDataForThirdParties_Sonar")
   .Does(() => {
     if (AppVeyor.IsRunningOnAppVeyor) {
       var settings = new SonarBeginSettings{
@@ -109,25 +116,12 @@ Task("__ProcessDataForThirdParties")
         Verbose = true,
         Organization = "trekking-for-charity"
       };
+
       if (FileExists("./build-artifacts/test/opencover.xml")) {
         settings.OpenCoverReportsPath = MakeAbsolute(File("./build-artifacts/test/opencover.xml")).ToString();
       }
 
       if (BuildSystem.AppVeyor.Environment.PullRequest.IsPullRequest) {
-        int? pullRequestKey = null;
-        int result;
-        if (!string.IsNullOrWhiteSpace(EnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER"))) {
-          if (int.TryParse(EnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER"), out result)) {
-            pullRequestKey = result;
-          }
-        }
-        Information("APPVEYOR_REPO_BRANCH {0}", EnvironmentVariable("APPVEYOR_REPO_BRANCH"));
-        Information("APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH {0}", EnvironmentVariable("APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH"));
-        Information("APPVEYOR_PULL_REQUEST_NUMBER {0}", EnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER"));
-        Information("APPVEYOR_REPO_PROVIDER {0}", EnvironmentVariable("APPVEYOR_REPO_PROVIDER"));
-        Information("APPVEYOR_REPO_NAME {0}", EnvironmentVariable("APPVEYOR_REPO_NAME"));
-        
-
         settings.PullRequestBase = EnvironmentVariable("APPVEYOR_REPO_BRANCH"); //sonar.pullrequest.base=master
         settings.PullRequestBranch = EnvironmentVariable("APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH");  //sonar.pullrequest.branch=feature/my-new-feature
         settings.PullRequestKey = BuildSystem.AppVeyor.Environment.PullRequest.Number;//sonar.pullrequest.key=5
@@ -138,10 +132,44 @@ Task("__ProcessDataForThirdParties")
       }
 
       Sonar(ctx => ctx.DotNetCoreMSBuild("../TrekkingForCharity.AlgoliaLocal.sln"), settings);
+    }
+  });
 
+Task("__ProcessDataForThirdParties_Codecov")
+  .Does(() => {
+    if (AppVeyor.IsRunningOnAppVeyor) {
       if (FileExists("./build-artifacts/test/opencover.xml")) {
         Codecov("./build-artifacts/test/opencover.xml", codecovToken);
       }
+    }
+  });
+Task("__ProcessDataForThirdParties_Snyk")
+  .Does(() => {
+    if (AppVeyor.IsRunningOnAppVeyor) {
+      var code = StartProcess("powershell", new ProcessSettings {
+        Arguments = new ProcessArgumentBuilder()
+          .Append("npm")            
+          .Append("install")            
+          .Append("snyk")            
+          .Append("-g")            
+      });
+
+      code = StartProcess("powershell", new ProcessSettings {
+        Arguments = new ProcessArgumentBuilder()
+          .Append("snyk")            
+          .Append("auth")            
+          .Append(snykToken)
+      });
+
+      code = StartProcess("powershell", new ProcessSettings {
+        Arguments = new ProcessArgumentBuilder()
+          .Append("snyk")            
+          .Append("monitor")            
+          .Append("--file=TrekkingForCharity.AlgoliaLocal.sln")            
+          .Append("--org=trekkingforcharity"), 
+        WorkingDirectory = "../"
+      });
+            
     }
   });
 
